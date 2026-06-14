@@ -1,0 +1,108 @@
+import React, { useState, useEffect, useRef } from "react";
+import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+
+export default function FaceExpressionDetector() {
+  const videoRef = useRef(null);
+  const faceLandmarkerRef = useRef(null);
+
+  const [expression, setExpression] = useState("Detecting...");
+
+  const detectFaces = async () => {
+    const video = videoRef.current;
+
+    if (!faceLandmarkerRef.current || !video) {
+      console.log("FaceLandmarker not ready");
+      return;
+    }
+
+    const results = faceLandmarkerRef.current.detectForVideo(
+      video,
+      performance.now(),
+    );
+
+    if (results.faceBlendshapes && results.faceBlendshapes.length > 0) {
+      const blendshapes = results.faceBlendshapes[0].categories;
+
+      const smile =
+        blendshapes.find((b) => b.categoryName === "mouthSmileLeft")?.score ||
+        0;
+
+      const smileRight =
+        blendshapes.find((b) => b.categoryName === "mouthSmileRight")?.score ||
+        0;
+
+      const jawOpen =
+        blendshapes.find((b) => b.categoryName === "jawOpen")?.score || 0;
+
+      const mouthFrownLeft =
+        blendshapes.find((b) => b.categoryName === "mouthFrownLeft")?.score ||
+        0;
+
+      const mouthFrownRight =
+        blendshapes.find((b) => b.categoryName === "mouthFrownRight")?.score ||
+        0;
+
+      if (smile > 0.5 || smileRight > 0.5) {
+        setExpression("😊 Happy");
+      } else if (jawOpen > 0.6) {
+        setExpression("😮 Surprised");
+      } else if (mouthFrownLeft > 0.04 || mouthFrownRight > 0.04) {
+        setExpression("😢 Sad");
+      } else {
+        setExpression("😐 Neutral");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const createFaceLandmarker = async () => {
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
+      );
+
+      faceLandmarkerRef.current = await FaceLandmarker.createFromOptions(
+        vision,
+        {
+          baseOptions: {
+            modelAssetPath:
+              "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+          },
+          runningMode: "VIDEO",
+          outputFaceBlendshapes: true,
+          numFaces: 1,
+        },
+      );
+
+      startCamera();
+    };
+
+    const startCamera = async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+
+      videoRef.current.srcObject = stream;
+
+      videoRef.current.onloadedmetadata = () => {
+        videoRef.current.play();
+      };
+    };
+
+    createFaceLandmarker();
+  }, []);
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h2>Face Expression Detector</h2>
+
+      <video ref={videoRef} autoPlay playsInline width="640" height="480" />
+
+      <br />
+      <br />
+
+      <button onClick={detectFaces}>Detect Face Expression</button>
+
+      <h2>{expression}</h2>
+    </div>
+  );
+}
