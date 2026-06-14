@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+import "../styles/facexpression.scss";
 
 export default function FaceExpressionDetector() {
   const videoRef = useRef(null);
@@ -92,17 +93,20 @@ export default function FaceExpressionDetector() {
   }, []);
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2>Face Expression Detector</h2>
+    <div className="face-detector">
+      <div className="container">
+        <h2>Face Expression Detector</h2>
 
-      <video ref={videoRef} autoPlay playsInline width="640" height="480" />
+        <video ref={videoRef} autoPlay playsInline />
 
-      <br />
-      <br />
+        <br />
 
-      <button onClick={detectFaces}>Detect Face Expression</button>
+        <button className="detect-btn" onClick={detectFaces}>
+          Detect Expression
+        </button>
 
-      <h2>{expression}</h2>
+        <div className="expression-box">{expression}</div>
+      </div>
     </div>
   );
 }
