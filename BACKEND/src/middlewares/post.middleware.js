@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const redis = require ("../config/cache")
 
 async function identifyUser(req, res, next) {
   const token = req.cookies?.token || req.headers.authorization?.split(" ")[1];

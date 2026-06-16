@@ -117,8 +117,18 @@ async function getMeController(req, res) {
   });
 }
 
+async function logoutController(req, res) {
+  const user = await userModel.findById(req.user.id);
+
+  res.clearCookie("token");
+  res.status(200).json({
+    message: "User logged out successfully.",
+  });
+}
+
 module.exports = {
   registerController,
   loginController,
   getMeController,
+  logoutController,
 };

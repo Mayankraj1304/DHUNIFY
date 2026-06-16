@@ -21,4 +21,13 @@ authRouter.post("/login", authController.loginController)
  * POST /api/auth/getme
  */
 authRouter.post("/getme",identifyUser, authController.getMeController)
+
+
+
+/**
+ * POST /api/auth/logout
+ */
+authRouter.post("/logout",identifyUser, authController.logoutController)
+
+
 module.exports = authRouter
