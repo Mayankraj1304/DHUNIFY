@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../styles/facexpression.scss";
-import { detectFaces, startCamera, createFaceLandmarker } from "../utils/utils";
+import { detectFaces, createFaceLandmarker } from "../utils/utils";
 
 export default function FaceExpressionDetector() {
   const videoRef = useRef(null);
