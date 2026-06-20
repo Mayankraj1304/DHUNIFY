@@ -2,15 +2,25 @@ import { useState, useEffect, useRef } from "react";
 import "../styles/facexpression.scss";
 import { detectFaces, createFaceLandmarker } from "../utils/utils";
 
-export default function FaceExpressionDetector() {
+export default function FaceExpressionDetector({ onExpressionDetected }) {
   const videoRef = useRef(null);
   const faceLandmarkerRef = useRef(null);
 
   const [expression, setExpression] = useState("Detecting...");
 
   useEffect(() => {
-    createFaceLandmarker(videoRef, faceLandmarkerRef);
+    createFaceLandmarker(videoRef, faceLandmarkerRef).catch((error) => {
+      console.error("FaceLandmarker init failed:", error);
+      setExpression("Initialization failed");
+    });
   }, []);
+
+  async function handleClick() {
+    const mood = await detectFaces(videoRef, faceLandmarkerRef, setExpression);
+    if (mood && typeof onExpressionDetected === "function") {
+      onExpressionDetected(mood);
+    }
+  }
 
   return (
     <div className="face-detector">
@@ -21,12 +31,7 @@ export default function FaceExpressionDetector() {
 
         <br />
 
-        <button
-          className="detect-btn"
-          onClick={() => {
-            detectFaces(videoRef, faceLandmarkerRef,setExpression);
-          }}
-        >
+        <button className="detect-btn" onClick={handleClick}>
           Detect Expression
         </button>
 

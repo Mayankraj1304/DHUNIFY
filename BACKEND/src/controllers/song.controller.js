@@ -31,6 +31,16 @@ async function uploadController(req, res) {
   });
 }
 
+async function getSongController(req, res) {
+  const { mood } = req.query;
+  const song = await songModel.findOne({ mood });
+  res.status(201).json({
+    message: "Song fetched successfully",
+    song
+  });
+}
+
 module.exports = {
   uploadController,
+  getSongController
 };

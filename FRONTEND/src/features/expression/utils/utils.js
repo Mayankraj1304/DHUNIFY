@@ -35,16 +35,20 @@ export const detectFaces = async (
     const mouthFrownRight =
       blendshapes.find((b) => b.categoryName === "mouthFrownRight")?.score || 0;
 
+    let mood = "neutral";
+
     if (smile > 0.5 || smileRight > 0.5) {
-      setExpression("😊 Happy");
-    } else if (jawOpen > 0.6) {
-      setExpression("😮 Surprised");
-    } else if (mouthFrownLeft > 0.04 || mouthFrownRight > 0.04) {
-      setExpression("😢 Sad");
-    } else {
-      setExpression("😐 Neutral");
+      mood = "happy";
+    } else if (jawOpen > 0.4) {
+      mood = "surprised";
+    } else if (mouthFrownLeft > 0.004 || mouthFrownRight > 0.004) {
+      mood = "sad";
     }
+
+    setExpression(mood);
+    return mood;
   }
+  return null;
 };
 
 export const startCamera = async (videoRef) => {

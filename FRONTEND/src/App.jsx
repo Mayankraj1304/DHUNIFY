@@ -3,11 +3,14 @@ import "./features/shared/styles/global.scss";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./app.routes";
 import { AuthProvider } from "./features/auth/auth.context.jsx";
+import { SongContextProvider } from "./features/home/home.context.jsx";
 function App() {
   return (
     <div>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <SongContextProvider>
+          <RouterProvider router={router} />
+        </SongContextProvider>
       </AuthProvider>
     </div>
   );
