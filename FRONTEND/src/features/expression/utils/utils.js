@@ -1,6 +1,10 @@
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 
-export const detectFaces = async (videoRef,faceLandmarkerRef,setExpression) => {
+export const detectFaces = async (
+  videoRef,
+  faceLandmarkerRef,
+  setExpression,
+) => {
   const video = videoRef.current;
 
   if (!faceLandmarkerRef.current || !video) {
@@ -55,7 +59,7 @@ export const startCamera = async (videoRef) => {
   };
 };
 
-export const createFaceLandmarker = async (videoRef,faceLandmarkerRef) => {
+export const createFaceLandmarker = async (videoRef, faceLandmarkerRef) => {
   const vision = await FilesetResolver.forVisionTasks(
     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
   );
