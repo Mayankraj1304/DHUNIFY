@@ -14,7 +14,8 @@ export const Login = () => {
     e.preventDefault();
     setError("");
     try {
-      await handleLogin({ email, password });
+      const data = await handleLogin({ email, password });
+      console.log("Login success, response=", data);
       navigate("/");
     } catch (err) {
       const msg = err?.response?.data?.message || err.message || "Login failed";
