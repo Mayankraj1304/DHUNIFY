@@ -1,0 +1,32 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Backend
+BACKEND/node_modules/
+BACKEND/dist/
+BACKEND/.DS_Store
+
+# Frontend
+FRONTEND/node_modules/
+FRONTEND/dist/
+FRONTEND/.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
